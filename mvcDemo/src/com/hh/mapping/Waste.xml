@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace:作用是把映射文件与持久化接口类进行关联。 -->
+<mapper namespace="com.hh.dao.WasteDao">
+
+	<!-- 二级缓存，缓存数量100个，60秒刷新，LRU表示：缓存满了后，把最少使用缓存删除. -->
+	<cache size="100" flushInterval="60000" eviction="LRU" />
+	
+	<!-- 有外键的情况，多对一 -->
+	<resultMap type="Waste" id="wasteMap">
+		<id property="waste_id" column="waste_id"/>
+		<!-- result:表示这一列是非主键和外键之外的普通列。 -->
+		<result property="name" column="w.name" />
+		<result property="code" column="w.code" />
+
+		<association property="waste_type" column="waste_type_id"
+			select="com.hh.dao.Waste_typeDao.findById">
+
+		</association>
+	</resultMap>
+
+	<!-- id属性要与持久化接口中的方法名匹配，值在此文件中要唯一。 resultType两个属性：表示数据库中返回的结果集封装成某个实体类型。 -->
+	<select id="find" resultMap="wasteMap">
+		select * from waste_type
+	</select>
+
+	<select id="findByTypeId" parameterType="int" resultMap="wasteMap">
+		select *
+		from waste where waste_type_id=#{id}
+	</select>
+
+
+</mapper> 

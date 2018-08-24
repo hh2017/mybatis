@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace:作用是把映射文件与持久化接口类进行关联。 -->
+<mapper namespace="com.hh.dao.Waste_typeDao">
+
+	<resultMap type="Waste_type" id="waste_typeMap">
+		<id column="type_id" property="id" />
+		<!-- result:表示这一列是非主键和外键之外的普通列。 -->
+		<result property="wasteName" column="name" />
+		<result property="wasteCode" column="code" />
+	</resultMap>
+
+	<!-- id属性要与持久化接口中的方法名匹配，值在此文件中要唯一。 resultType两个属性：表示数据库中返回的结果集封装成某个实体类型。 -->
+	<select id="find" resultMap="waste_typeMap">
+		select * from waste_type
+	</select>
+	
+	<!-- #{id}是一个占位符，会自动把传入的参数填充进来，点位符的名称与参数名没有关联。 -->
+	<select id="findById" parameterType="int" resultMap="waste_typeMap">
+	  select * from waste_type where type_id=#{id}
+	</select>
+	
+	<!-- 下面是增删改  parameterType="Waste_type"别名 ,能自动获取数据库中受影响的行数
+	  #{wasteName},#{wasteCode}占位符是从参数对象的属性中取数据  
+	   useGeneratedKeys="true" keyProperty="id" 这两个属性的作用是获取自动增长值，并保存到实体对象的ID属性中
+	  -->
+	<insert id="add" parameterType="Waste_type" useGeneratedKeys="true" keyProperty="id">
+	   insert into waste_type values(null,#{wasteName},#{wasteCode})
+	</insert>
+	<update id="update" parameterType="Waste_type">
+	   update waste_type set name=#{wasteName},code=#{wasteCode} where type_id=#{id}
+	</update>
+	<delete id="delete" parameterType="int">
+	   delete from waste_type where type_id=#{id}
+	</delete>
+	
+	
+	
+</mapper> 
